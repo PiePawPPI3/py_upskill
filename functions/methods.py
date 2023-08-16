@@ -1,9 +1,11 @@
-# functions/grades1.py
-def read_the_file(file_path):
-    with open(file_path, "r") as file:
+from typing import List
+
+
+def read_the_file(file_path: str):
+    with open(file_path, 'r') as file:
         data = file.readlines()
         if data:
-            print("file_content:")
+            print('file_content:')
             for line in data:
                 print(line.strip())
                 fields = line.strip().split(',')
@@ -11,13 +13,17 @@ def read_the_file(file_path):
                 scores = [float(score) for score in fields[1:]
                           if score.strip().replace(',', '', 1).isdigit()]
                 average = calculate_average(scores)
-                print(f"User: {username} has average: {average:.2f}")
+                print_user_average_score(username, average)
         else:
-            print("file_is_empty.")
+            print('file_is_empty.')
 
 
-def calculate_average(scores):
+def calculate_average(scores: List[float]):
     if len(scores) > 0:
         return sum(scores) / len(scores)
     else:
         return 0
+
+
+def print_user_average_score(username: str, average: float) -> None:
+    print(f'User: {username} has average: {average:.2f}')
