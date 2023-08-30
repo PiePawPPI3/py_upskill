@@ -1,3 +1,6 @@
+import datetime
+
+
 def read_the_file(file_path: str) -> list:
     try:
         with open(file_path, 'r') as file:
@@ -42,3 +45,6 @@ def print_results(results: list[dict]) -> None:
         print('Scores:', result['scores'])
         print('Average:', result['average'])
         print('_ _ _')
+
+
+print("*** Created at :", datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
