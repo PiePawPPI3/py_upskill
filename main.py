@@ -1,12 +1,13 @@
 # main.py
-from functions.methods import read_the_file, process_the_content, print_results
+from adapters.data_parser import read_scores, display_scores
+from busines_logic.calculate_averages import preparing_statistics
 
 
 def main():
     file_path = "resources/grades1.txt"
-    lines = read_the_file(file_path)
-    results = process_the_content(lines)
-    print_results(results)
+    lines = read_scores(file_path)
+    results = preparing_statistics(lines)
+    display_scores(results)
 
 
 if __name__ == "__main__":
