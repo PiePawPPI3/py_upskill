@@ -1,16 +1,20 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+# main.py
+from adapters.data_parser import read_scores, display_scores,EmptyFileError
+from busines_logic.calculate_averages import prepare_statistics
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def main():
+    file_path = "resources/grades1.txt"
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    try:
+        lines = read_scores(file_path)
+        results = prepare_statistics(lines)
+        display_scores(results)
+    except EmptyFileError:
+        print('File is empty.')
+    except FileNotFoundError:
+        print('File not found.')
+
+
+if __name__ == "__main__":
+    main()
