@@ -1,7 +1,7 @@
 # main.py
-from adapters.data_parser import read_scores, display_scores,EmptyFileError
+from adapters.data_parser import read_scores, display_scores, EmptyFileError
 from busines_logic.calculate_averages import prepare_statistics
-
+from busines_logic.student import Student
 
 def main():
     file_path = "resources/grades1.txt"
