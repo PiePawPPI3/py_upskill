@@ -1,4 +1,4 @@
-def preparing_statistics(lines: list[dict]) -> list[dict]:
+def prepare_statistics(lines: list[dict[str, list[float]]]) -> list[dict[str, any]]:
     results = []
     for line in lines:
         username = line['username']
