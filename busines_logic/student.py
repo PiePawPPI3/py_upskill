@@ -11,4 +11,5 @@ class Student:
 
     def display_student_info(self):
         print('Username#: ' + self.username)
-        print('Scores#: ' + self.scores)
+        print('Scores#: ' + str(self.scores))
+

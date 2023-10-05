@@ -6,11 +6,8 @@ def prepare_statistics(lines: list[dict[str, list[float]]]) -> list[dict[str, an
     for line in lines:
         username = line['username']
         scores = line['scores']
-        # average = round(calculate_average(scores), 1)
         student = Student(username, scores)
 
         results.append({'username': username, 'scores': scores, 'average': student.calculate_average()})
     return results
-
-
 
