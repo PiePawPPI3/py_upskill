@@ -1,4 +1,4 @@
-from busines_logic.student import Student
+from Ports.student import Student
 
 
 def prepare_statistics(lines: list[dict[str, list[float]]]) -> list[dict[str, any]]:

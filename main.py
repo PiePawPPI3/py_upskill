@@ -1,7 +1,7 @@
 # main.py
 from adapters.data_parser import read_scores, display_scores, EmptyFileError
 from busines_logic.calculate_averages import prepare_statistics
-from busines_logic.student import Student
+from Ports.student import Student
 
 
 def main():
@@ -12,19 +12,11 @@ def main():
         results = prepare_statistics(lines)
         display_scores(results)
 
-        username = "Cezary"
-        students_list = [student for student in results if student['username'] == username]
-
-        if students_list:
-            for student_details in students_list:
-                scores = student_details['scores']
-                student = Student(username, scores)
-                student.display_student_info()
-
-                average = student.calculate_average()
-                print('Average for ' + username + ': ' + str(average))
-        else:
-            print('Student with username' + username + 'does not exist.')
+        for student_details in results:
+            username = student_details['username']
+            scores = student_details['scores']
+            student = Student(username, scores)
+            student.display_student_info()
 
     except EmptyFileError:
         print('File is empty.')
