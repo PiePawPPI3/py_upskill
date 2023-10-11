@@ -1,4 +1,4 @@
-from Ports.student import Student
+from ports.student import Student
 
 
 def prepare_statistics(lines: list[dict[str, list[float]]]) -> list[dict[str, any]]:

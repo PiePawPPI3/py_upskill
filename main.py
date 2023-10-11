@@ -1,7 +1,7 @@
 # main.py
 from adapters.data_parser import read_scores, display_scores, EmptyFileError
 from busines_logic.calculate_averages import prepare_statistics
-from Ports.student import Student
+from ports.student import Student
 
 
 def main():
