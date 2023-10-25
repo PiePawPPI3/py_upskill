@@ -1,4 +1,6 @@
 import datetime
+from pathlib import Path
+
 from ports.student import Student
 
 
@@ -6,9 +8,35 @@ class EmptyFileError(Exception):
     pass
 
 
+class UnsupportedFileFormatError(Exception):
+    pass
+
+
+class AccessDeniedError(Exception):
+    pass
+
+
+# TO DO
+class InvalidGradeError(Exception):
+    pass
+
+
+# TO DO
+class DataProcessingError(Exception):
+    pass
+
+
 def read_scores(file_path: str) -> list[Student]:
-    with open(file_path, 'r') as file:
-        data = file.readlines()
+    if not Path(file_path).is_file():
+        raise FileNotFoundError()
+    if not file_path.lower().endswith('.txt'):
+        raise UnsupportedFileFormatError()
+
+    try:
+        with open(file_path, 'r') as file:
+            data = file.readlines()
+    except PermissionError:
+        raise AccessDeniedError()
 
     if not data:
         raise EmptyFileError()
@@ -20,12 +48,16 @@ def read_scores(file_path: str) -> list[Student]:
         username = fields[0]
         scores = []
 
-        for score in fields:
+        for score in fields[1:]:
             try:
                 score_value = float(score.strip().replace(',', '', 1))
+                if score_value < 1 or score_value > 6:
+                    print(f'Grades beyond the range 1-6=> {score_value}')
                 scores.append(score_value)
-            except ValueError:
-                pass
+            except ValueError as e:
+                print(f'Error while processing score for {fields[0]}: {e}')
+                # raise DataProcessingError(f'Error while processing score for {fields[0]}: {e}') TO DO
+                continue
 
         student = Student(username, scores)
         results.append(student)
