@@ -6,3 +6,4 @@ Pawel,aaa,zz,2,4
 Leon,3.1,,
 Wojtek,0,4,x
 Karol,a,b,c,d,
+Cezary,3,6

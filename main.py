@@ -1,6 +1,5 @@
 # main.py
-from adapters.data_parser import read_scores, display_scores,EmptyFileError
-from busines_logic.calculate_averages import prepare_statistics
+from adapters.data_parser import read_scores, display_scores, EmptyFileError
 
 
 def main():
@@ -8,8 +7,8 @@ def main():
 
     try:
         lines = read_scores(file_path)
-        results = prepare_statistics(lines)
-        display_scores(results)
+        display_scores(lines)
+
     except EmptyFileError:
         print('File is empty.')
     except FileNotFoundError:
