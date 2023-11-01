@@ -1,45 +1,26 @@
 import datetime
-from pathlib import Path
 
+from ports.custom_errors import CustomErrors
 from ports.student import Student
 
 
-class EmptyFileError(Exception):
-    pass
-
-
-class UnsupportedFileFormatError(Exception):
-    pass
-
-
-class AccessDeniedError(Exception):
-    pass
-
-
-# TO DO
-class InvalidGradeError(Exception):
-    pass
-
-
-# TO DO
-class DataProcessingError(Exception):
-    pass
-
-
 def read_scores(file_path: str) -> list[Student]:
-    if not Path(file_path).is_file():
-        raise FileNotFoundError()
-    if not file_path.lower().endswith('.txt'):
-        raise UnsupportedFileFormatError()
-
     try:
+        if not file_path.lower().endswith('.txt'):
+            raise CustomErrors.UnsupportedFileFormatError()
         with open(file_path, 'r') as file:
             data = file.readlines()
+    except FileNotFoundError:
+        raise CustomErrors.FileNotFound()
     except PermissionError:
-        raise AccessDeniedError()
+        raise CustomErrors.AccessDeniedError()
+    except UnicodeDecodeError:
+        raise CustomErrors.BinaryFileError()
+    except OSError:
+        raise CustomErrors.AccessDeniedError()
 
     if not data:
-        raise EmptyFileError()
+        raise CustomErrors.EmptyFileError()
 
     results = []
 
@@ -52,12 +33,10 @@ def read_scores(file_path: str) -> list[Student]:
             try:
                 score_value = float(score.strip().replace(',', '', 1))
                 if score_value < 1 or score_value > 6:
-                    print(f'Grades beyond the range 1-6=> {score_value}')
+                    raise CustomErrors.InvalidGradeError()
                 scores.append(score_value)
-            except ValueError as e:
-                print(f'Error while processing score for {fields[0]}: {e}')
-                # raise DataProcessingError(f'Error while processing score for {fields[0]}: {e}') TO DO
-                continue
+            except ValueError:
+                raise CustomErrors.DataProcessingError()
 
         student = Student(username, scores)
         results.append(student)
