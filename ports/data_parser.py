@@ -28,3 +28,7 @@ class BinaryFileError(Exception):
 
 class UnknownError(Exception):
     pass
+
+
+class FileSaveError(Exception):
+    pass
