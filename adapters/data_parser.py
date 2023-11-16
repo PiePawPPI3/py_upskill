@@ -8,7 +8,7 @@ from ports.student import Student
 def read_scores(file_path: str) -> list[Student]:
     try:
         if not file_path.lower().endswith('.txt'):
-            raise UnsupportedFileFormatError()
+            raise UnsupportedFileFormatError
         with open(file_path, 'r') as file:
             data = file.readlines()
     except FileNotFoundError:
@@ -21,7 +21,7 @@ def read_scores(file_path: str) -> list[Student]:
         raise UnknownError
 
     if not data:
-        raise EmptyFileError()
+        raise EmptyFileError
 
     results = []
 
