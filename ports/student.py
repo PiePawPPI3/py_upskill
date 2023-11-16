@@ -23,9 +23,9 @@ class Student:
 
     def display_student_info(self) -> str:
         student_info = (
-            f"Username#: {self._username}\n"
-            f"Scores#: {self._scores}\n"
-            f"Average#: {self.calculate_average()}\n"
-            f"Passed#: {'Passed' if self.has_student_passed() else 'Failed'}"
+            f'Username#: {self._username}\n'
+            f'Scores#: {self._scores}\n'
+            f'Average#: {self.calculate_average()}\n'
+            f'Passed#: {"Passed" if self.has_student_passed() else "Failed"}'
         )
         return student_info
