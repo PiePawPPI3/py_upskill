@@ -1,7 +1,10 @@
 # main.py
 from adapters.data_parser import read_scores, general_summary
+from adapters.data_saver import TxtWriter, PdfWriter
 from ports.data_parser import UnsupportedFileFormatError, FileNotFound, AccessDeniedError, BinaryFileError, \
     EmptyFileError, InvalidGradeError, DataProcessingError, UnknownError,FileSaveError
+
+
 
 
 def main():
@@ -14,7 +17,9 @@ def main():
 
     try:
         lines = read_scores(file_path)
-        general_summary(lines, output_path, save_as_txt, save_as_pdf, display_summary)
+        txt_writer = TxtWriter()
+        pdf_writer = PdfWriter()
+        general_summary(lines, output_path, save_as_txt, save_as_pdf, display_summary, txt_writer, pdf_writer)
 
     except FileNotFound:
         print('File not found.')
