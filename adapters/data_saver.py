@@ -1,11 +1,11 @@
 import datetime
-from abc import ABC
+from abc import ABC, abstractmethod
 
 from ports.data_parser import FileSaveError
 
 
 class FileWriter(ABC):
-
+    @abstractmethod
     def write(self, content: str, output_path: str) -> None:
         pass
 
@@ -18,7 +18,7 @@ class TxtWriter(FileWriter):
             with open(file_path, 'w') as file:
                 file.write(content)
             print(f'Scores saved to "{file_path}" successfully.')
-        except Exception as e:
+        except OSError as e:
             raise FileSaveError(e)
 
 
@@ -30,5 +30,5 @@ class PdfWriter(FileWriter):
             with open(file_path, 'w') as file:
                 pass  # to:do
             print(f'Scores saved to "{file_path}" successfully.')
-        except Exception as e:
+        except OSError as e:
             raise FileSaveError(e)
