@@ -32,3 +32,7 @@ class BinaryFileError(StudentGradesAppError):
 
 class UnknownError(StudentGradesAppError):
     pass
+
+
+class FileSaveError(Exception):
+    pass
