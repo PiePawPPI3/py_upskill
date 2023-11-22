@@ -1,30 +1,34 @@
-class EmptyFileError(Exception):
+class StudentGradesAppError(Exception):
     pass
 
 
-class FileNotFound(Exception):
+class EmptyFileError(StudentGradesAppError):
     pass
 
 
-class UnsupportedFileFormatError(Exception):
+class FileNotFound(StudentGradesAppError):
     pass
 
 
-class AccessDeniedError(Exception):
+class UnsupportedFileFormatError(StudentGradesAppError):
     pass
 
 
-class InvalidGradeError(Exception):
+class AccessDeniedError(StudentGradesAppError):
     pass
 
 
-class DataProcessingError(Exception):
+class InvalidGradeError(StudentGradesAppError):
     pass
 
 
-class BinaryFileError(Exception):
+class DataProcessingError(StudentGradesAppError):
     pass
 
 
-class UnknownError(Exception):
+class BinaryFileError(StudentGradesAppError):
+    pass
+
+
+class UnknownError(StudentGradesAppError):
     pass
