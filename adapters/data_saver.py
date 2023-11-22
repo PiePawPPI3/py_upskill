@@ -32,3 +32,8 @@ class PdfWriter(FileWriter):
             print(f'Scores saved to "{file_path}" successfully.')
         except OSError as e:
             raise FileSaveError(e)
+
+
+class TerminalPrinter(FileWriter):
+    def write(self, content: str, output_path: str = None) -> None:
+        print(content)

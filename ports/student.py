@@ -21,7 +21,7 @@ class Student:
 
         return average >= 2.0 and len(self._scores) >= 3
 
-    def display_student_info(self) -> str:
+    def get_student_info(self) -> str:
         student_info = (
             f'Username#: {self._username}\n'
             f'Scores#: {self._scores}\n'
