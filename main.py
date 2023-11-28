@@ -17,15 +17,9 @@ def generate_summary_text(results: list[Student]) -> str:
     return summary
 
 
-def save_summary(summary: str, output_path: str, save_as_txt: bool, save_as_pdf: bool, display_summary: bool,
-                 txt_writer: FileWriter,
-                 pdf_writer: FileWriter, terminal_printer: FileWriter) -> None:
-    if save_as_txt:
-        txt_writer.write(summary, output_path)
-    if save_as_pdf:
-        pdf_writer.write(summary, output_path)
-    if display_summary:
-        terminal_printer.write(summary)
+def save_summary(summary: str, writers: list[FileWriter]) -> None:
+    for writer in writers:
+        writer.write(summary)
 
 
 def main():
@@ -39,12 +33,21 @@ def main():
     try:
         lines = read_scores(file_path)
         summary_text = generate_summary_text(lines)
-        txt_writer = TxtWriter()
-        pdf_writer = PdfWriter()
-        terminal_printer = TerminalPrinter()
 
-        save_summary(summary_text, output_path, save_as_txt, save_as_pdf, display_summary, txt_writer, pdf_writer,
-                     terminal_printer)
+        writers = []
+        if save_as_txt:
+            txt_writer = TxtWriter(output_path)
+            writers.append(txt_writer)
+
+        if save_as_pdf:
+            pdf_writer = PdfWriter(output_path)
+            writers.append(pdf_writer)
+
+        if display_summary:
+            terminal_printer = TerminalPrinter()
+            terminal_printer.write(summary_text)
+
+        save_summary(summary_text, writers)
 
     except FileNotFound:
         print('File not found.')
