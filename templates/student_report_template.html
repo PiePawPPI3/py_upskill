@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Student Report</title>
+</head>
+<body>
+    <h1>Student Report</h1>
+    <h5>Generated at: {{ timestamp }}</h5>
+
+    {% for student in students %}
+    <tr>
+        <p>{{ student.username| safe }}</p>
+        <p>{{ student.scores }}</p>
+        <p>{{ student.average }}</p>
+        <p>{{ student.passed }}</p>
+    </tr>
+    {% endfor %}
+</body>
+</html>

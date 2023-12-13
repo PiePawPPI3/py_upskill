@@ -29,3 +29,11 @@ class Student:
             f'Passed#: {"Passed" if self.has_student_passed() else "Failed"}'
         )
         return student_info
+
+    @property
+    def username(self):
+        return self._username
+
+    @property
+    def scores(self):
+        return self._scores

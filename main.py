@@ -1,5 +1,3 @@
-import datetime
-
 from adapters.data_parser import read_scores
 from adapters.data_saver import TxtWriter, PdfWriter, FileWriter, TerminalPrinter
 from ports.data_parser import (
@@ -9,12 +7,16 @@ from ports.data_parser import (
 from ports.student import Student
 
 
-def generate_summary_text(results: list[Student]) -> str:
-    summary = f'*** Created at: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M")}\n'
+def generate_summary_text(results: list[Student]) -> list[dict[str, float | str | list[float]]]:
+    students_data = []
     for student in results:
-        summary += student.get_student_info() + '\n'
-        summary += '_ _ _\n'
-    return summary
+        students_data.append({
+            'username': student.username,
+            'scores': student.scores,
+            'average': student.calculate_average(),
+            'passed': "Passed" if student.has_student_passed() else "Failed"
+        })
+    return students_data
 
 
 def save_summary(summary: str, writers: list[FileWriter]) -> None:
