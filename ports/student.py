@@ -21,19 +21,11 @@ class Student:
 
         return average >= 2.0 and len(self._scores) >= 3
 
-    def get_student_info(self) -> str:
-        student_info = (
-            f'Username#: {self._username}\n'
-            f'Scores#: {self._scores}\n'
-            f'Average#: {self.calculate_average()}\n'
-            f'Passed#: {"Passed" if self.has_student_passed() else "Failed"}'
-        )
-        return student_info
+    def get_student_info(self) -> dict:
+        return {
+            'username': self._username,
+            'scores': self._scores,
+            'average': self.calculate_average(),
+            'passed': "Passed" if self.has_student_passed() else "Failed"
+        }
 
-    @property
-    def username(self):
-        return self._username
-
-    @property
-    def scores(self):
-        return self._scores
