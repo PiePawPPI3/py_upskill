@@ -1,5 +1,5 @@
 from adapters.data_parser import read_scores
-from adapters.data_saver import TxtWriter, PdfWriter, FileWriter, TerminalPrinter
+from adapters.data_saver import TxtWriter, HtmlWriter, FileWriter, TerminalPrinter
 from ports.data_parser import (
     UnsupportedFileFormatError, FileNotFound, AccessDeniedError, BinaryFileError,
     EmptyFileError, InvalidGradeError, DataProcessingError, UnknownError, FileSaveError
@@ -7,19 +7,19 @@ from ports.data_parser import (
 from ports.student import Student
 
 
-def generate_summary_text(results: list[Student]) -> list[dict[str, float | str | list[float]]]:
-    students_data = []
-    for student in results:
-        students_data.append({
-            'username': student.username,
-            'scores': student.scores,
-            'average': student.calculate_average(),
-            'passed': "Passed" if student.has_student_passed() else "Failed"
-        })
-    return students_data
+# def generate_summary_text(results: list[Student]) -> list[dict[str, float | str | list[float]]]:
+#     students_data = []
+#     for student in results:
+#         students_data.append({
+#             'username': student.username,
+#             'scores': student.scores,
+#             'average': student.calculate_average(),
+#             'passed': "Passed" if student.has_student_passed() else "Failed"
+#         })
+#     return students_data
 
 
-def save_summary(summary: str, writers: list[FileWriter]) -> None:
+def save_summary(summary: list[Student], writers: list[FileWriter]) -> None:
     for writer in writers:
         writer.write(summary)
 
@@ -29,27 +29,29 @@ def main():
     output_path = "outputs/"
 
     save_as_txt = True
-    save_as_pdf = False
+    save_as_html = True
     display_summary = True
 
     try:
-        lines = read_scores(file_path)
-        summary_text = generate_summary_text(lines)
+        students = read_scores(file_path)
+        for student in students:
+            student.calculate_average()
+            student.has_student_passed()
 
         writers = []
         if save_as_txt:
             txt_writer = TxtWriter(output_path)
             writers.append(txt_writer)
 
-        if save_as_pdf:
-            pdf_writer = PdfWriter(output_path)
-            writers.append(pdf_writer)
+        if save_as_html:
+            html_writer = HtmlWriter(output_path)
+            writers.append(html_writer)
 
         if display_summary:
             terminal_printer = TerminalPrinter()
-            terminal_printer.write(summary_text)
+            terminal_printer.write(students)
 
-        save_summary(summary_text, writers)
+        save_summary(students, writers)
 
     except FileNotFound:
         print('File not found.')

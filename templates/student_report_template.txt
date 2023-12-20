@@ -1,0 +1,11 @@
+Student Report
+Generated at: {{ timestamp }}
+
+{% for student in students %}
+Username: {{ student.username }}
+Scores: {{ student.scores }}
+Average: {{ student.average }}
+Passed: {{ student.passed }}
+---
+
+{% endfor %}
