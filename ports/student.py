@@ -21,12 +21,18 @@ class Student:
 
         return average >= 2.0 and len(self._scores) >= 3
 
-    def display_student_info(self):
-        print('Username#: ' + self._username)
-        print('Scores#: ' + str(self._scores))
-        print('Average#: ' + str(self.calculate_average()))
+    @property
+    def username(self) -> str:
+        return self._username
 
-        if self.has_student_passed():
-            print('Passed#: Passed')
-        else:
-            print('Passed#: Failed')
+    @property
+    def scores(self) -> list[float]:
+        return self._scores
+
+    @property
+    def average(self) -> float:
+        return self.calculate_average()
+
+    @property
+    def passed(self) -> str:
+        return "Passed" if self.has_student_passed() else "Failed"

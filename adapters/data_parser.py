@@ -1,7 +1,6 @@
-import datetime
 
 from ports.data_parser import UnsupportedFileFormatError, FileNotFound, AccessDeniedError, BinaryFileError, \
-    EmptyFileError, InvalidGradeError, DataProcessingError, UnknownError
+    EmptyFileError, InvalidGradeError, DataProcessingError, UnknownError, FileSaveError
 from ports.student import Student
 
 
@@ -43,10 +42,3 @@ def read_scores(file_path: str) -> list[Student]:
         results.append(student)
 
     return results
-
-
-def display_scores(results: list[Student]) -> None:
-    print("*** Created at :", datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
-    for student in results:
-        student.display_student_info()
-        print('_ _ _')
