@@ -4,9 +4,10 @@ from ports.data_parser import (
     UnsupportedFileFormatError, FileNotFound, AccessDeniedError, BinaryFileError,
     EmptyFileError, InvalidGradeError, DataProcessingError, UnknownError, FileSaveError
 )
+from ports.student import Student
 
 
-def save_summary(summary: list[dict], writers: list[FileWriter]) -> None:
+def save_summary(summary: list[Student], writers: list[FileWriter]) -> None:
     for writer in writers:
         writer.write(summary)
 
@@ -21,7 +22,6 @@ def main():
 
     try:
         students = read_scores(file_path)
-        student_info_list = [student.get_student_info() for student in students]
 
         writers = []
         if save_as_txt:
@@ -34,9 +34,9 @@ def main():
 
         if display_summary:
             terminal_printer = TerminalPrinter()
-            terminal_printer.write(student_info_list)
+            writers.append(terminal_printer)
 
-        save_summary(student_info_list, writers)
+        save_summary(students, writers)
 
     except FileNotFound:
         print('File not found.')

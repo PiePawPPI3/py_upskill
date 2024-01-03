@@ -10,7 +10,7 @@ from ports.student import Student
 class FileWriter(ABC):
 
     @abstractmethod
-    def write(self, content: list[dict]) -> None:
+    def write(self, students_data: list[Student]) -> None:
         pass
 
 
@@ -53,12 +53,12 @@ class HtmlWriter(FileWriter):
 
 
 class TerminalPrinter(FileWriter):
-    def write(self, students_data: list[dict]) -> None:
+    def write(self, students_data: list[Student]) -> None:
         rendered_content = render_content(students_data, 'student_report_template.txt')
         print(rendered_content)
 
 
-def render_content(students_data: list, template_name: str) -> str:
+def render_content(students_data: list[Student], template_name: str) -> str:
     env = Environment(loader=FileSystemLoader('templates'))
     template = env.get_template(template_name)
 
