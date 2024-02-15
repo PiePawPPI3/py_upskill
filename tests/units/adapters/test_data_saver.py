@@ -1,9 +1,14 @@
 import datetime
+import json
+from pathlib import Path
 
 import pytest
 
 from adapters.data_saver import TerminalPrinter, TxtWriter, HtmlWriter, render_content
 from ports.student import Student
+
+TEMPLATE_PATH = Path(__file__).parent.parent.parent.parent / 'templates'
+TEMPLATE_PATH_DATA = Path(__file__).parent.parent.parent.parent / 'data'
 
 
 @pytest.fixture
@@ -32,6 +37,24 @@ def txt_writer(tmpdir):
 def html_writer(tmpdir):
     output_path = tmpdir.mkdir("outputs").strpath
     return HtmlWriter(output_path)
+
+
+@pytest.fixture(params=['txt', 'html'])
+def template_name_fixture(request) -> str:
+    if request.param == 'txt':
+        return str(TEMPLATE_PATH / 'student_report_template.txt')
+    elif request.param == 'html':
+        return str(TEMPLATE_PATH / 'student_report_template.html')
+
+
+@pytest.mark.parametrize('expected_content',
+                         [
+                             json.load(open(TEMPLATE_PATH_DATA / 'test_data_txt.json'))['expected_content'],
+                             json.load(open(TEMPLATE_PATH_DATA / 'test_data_html.json'))['expected_content']
+                         ])
+def test_render_content(students_data: list[Student], template_name_fixture: str,
+                        expected_content: str) -> None:
+    assert render_content(students_data, template_name_fixture) == expected_content
 
 
 def test_terminal_printer(mocker, students_data: list[Student], caplog, terminal_printer) -> None:
@@ -65,17 +88,3 @@ def test_html_writer_writes_file(tmpdir, mocker, students_data: list[Student], h
     assert expected_file_path.exists()
     content = expected_file_path.read_text()
     assert '<p>Romek</p>' in content
-
-
-def test_render_content_txt(students_data):
-    template_name = 'templates/student_report_template.txt'
-    expected_content = f'Student Report\nGenerated at: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M")}\n'
-
-    for student in students_data:
-        expected_content += f'Username: {student.username}\n'
-        expected_content += f'Scores: {student.scores}\n'
-        expected_content += f'Average: {student.average}\n'
-        expected_content += f'Passed: {student.passed}\n'
-        expected_content += '---\n'
-
-    assert render_content(students_data, template_name) == expected_content
