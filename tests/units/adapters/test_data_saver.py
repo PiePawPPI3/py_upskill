@@ -8,8 +8,6 @@ from adapters.data_saver import TerminalPrinter, TxtWriter, HtmlWriter, render_c
 from ports.student import Student
 
 TEMPLATE_PATH = Path(__file__).parent.parent.parent.parent / 'templates'
-TEMPLATE_PATH_DATA = Path(__file__).parent.parent.parent.parent / 'data'
-
 
 @pytest.fixture
 def students_data() -> list[Student]:
@@ -47,11 +45,10 @@ def template_name_fixture(request) -> str:
         return str(TEMPLATE_PATH / 'student_report_template.html')
 
 
-@pytest.mark.parametrize('expected_content',
-                         [
-                             json.load(open(TEMPLATE_PATH_DATA / 'test_data_txt.json'))['expected_content'],
-                             json.load(open(TEMPLATE_PATH_DATA / 'test_data_html.json'))['expected_content']
-                         ])
+@pytest.mark.parametrize('expected_content', [
+    (TEMPLATE_PATH / 'student_report_template.txt').read_text(),
+    (TEMPLATE_PATH / 'student_report_template.html').read_text()
+])
 def test_render_content(students_data: list[Student], template_name_fixture: str,
                         expected_content: str) -> None:
     assert render_content(students_data, template_name_fixture) == expected_content
