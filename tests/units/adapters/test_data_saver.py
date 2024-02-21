@@ -8,14 +8,15 @@ from adapters.data_saver import TerminalPrinter, TxtWriter, HtmlWriter, render_c
 from ports.student import Student
 
 TEMPLATE_PATH = Path(__file__).parent.parent.parent.parent / 'templates'
+TEMPLATE_PATH_DATA = Path(__file__).parent / 'data'
+
 
 @pytest.fixture
 def students_data() -> list[Student]:
     students_data = [
-        Student('Romek', [4, 4, 5, 6]),
-        Student('Tomek', [3, 1, 5]),
-        Student('Atomek', [2, 5, 5, 6, 2]),
-        Student('Pawel', [1, 4, 4, 3]),
+        Student('Cezary', [3.0, 5.0, 1.0, 3.0, 1.0, 1.0, 5.0, 4.0, 6.0]),
+        Student('Dionizy', [6.0, 3.0, 6.0, 5.5, 5.0, 3.5, 4.0]),
+        Student('Barnaba', [5.0, 4.0, 5.5, 4.0, 6.0, 3.5, 1.0])
     ]
     return students_data
 
@@ -40,15 +41,16 @@ def html_writer(tmpdir):
 @pytest.fixture(params=['txt', 'html'])
 def template_name_fixture(request) -> str:
     if request.param == 'txt':
-        return str(TEMPLATE_PATH / 'student_report_template.txt')
+        return str('student_report_template.txt')
     elif request.param == 'html':
-        return str(TEMPLATE_PATH / 'student_report_template.html')
+        return str('student_report_template.html')
 
 
-@pytest.mark.parametrize('expected_content', [
-    (TEMPLATE_PATH / 'student_report_template.txt').read_text(),
-    (TEMPLATE_PATH / 'student_report_template.html').read_text()
-])
+@pytest.mark.parametrize('expected_content',
+                         [
+                             (TEMPLATE_PATH_DATA / 'test_data_student.txt').read_text(),
+                             (TEMPLATE_PATH_DATA / 'test_data_student.html').read_text()
+                         ])
 def test_render_content(students_data: list[Student], template_name_fixture: str,
                         expected_content: str) -> None:
     assert render_content(students_data, template_name_fixture) == expected_content
