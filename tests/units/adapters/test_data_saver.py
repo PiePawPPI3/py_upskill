@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from freezegun import freeze_time
 from adapters.data_saver import TerminalPrinter, TxtWriter, HtmlWriter, render_content
 from ports.student import Student
 
@@ -37,25 +38,16 @@ def html_writer(tmpdir):
     return HtmlWriter(output_path)
 
 
-@pytest.fixture(params=['txt', 'html'])
-def template_name_fixture(request) -> str:
-    if request.param == 'txt':
-        return str('student_report_template.txt')
-    elif request.param == 'html':
-        return str('student_report_template.html')
-
-
-@pytest.mark.parametrize('expected_content_path',
+@pytest.mark.parametrize('expected_content_path, template_type',
                          [
-                             (TEMPLATE_PATH_DATA / 'test_data_student.txt'),
-                             (TEMPLATE_PATH_DATA / 'test_data_student.html')
+                             ((TEMPLATE_PATH_DATA / 'test_data_student.txt'), 'txt'),
+                             ((TEMPLATE_PATH_DATA / 'test_data_student.html'), 'html')
                          ])
-def test_render_content(students_data: list[Student], template_name_fixture: str,
-                        expected_content_path: Path) -> None:
-    expected_content = expected_content_path.read_text().replace(
-        'Generated at: 2024-02-21 22:58',
-        f'Generated at: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M")}')
-    assert render_content(students_data, template_name_fixture) == expected_content
+@freeze_time("2024-02-21 22:58")
+def test_render_content(students_data: list[Student], expected_content_path: Path, template_type: str) -> None:
+    expected_content = expected_content_path.read_text()
+    template_name = f"student_report_template.{template_type}"
+    assert render_content(students_data, template_name) == expected_content
 
 
 def test_terminal_printer(mocker, students_data: list[Student], caplog, terminal_printer) -> None:
