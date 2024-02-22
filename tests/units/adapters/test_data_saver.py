@@ -1,5 +1,4 @@
 import datetime
-import json
 from pathlib import Path
 
 import pytest
@@ -46,13 +45,16 @@ def template_name_fixture(request) -> str:
         return str('student_report_template.html')
 
 
-@pytest.mark.parametrize('expected_content',
+@pytest.mark.parametrize('expected_content_path',
                          [
-                             (TEMPLATE_PATH_DATA / 'test_data_student.txt').read_text(),
-                             (TEMPLATE_PATH_DATA / 'test_data_student.html').read_text()
+                             (TEMPLATE_PATH_DATA / 'test_data_student.txt'),
+                             (TEMPLATE_PATH_DATA / 'test_data_student.html')
                          ])
 def test_render_content(students_data: list[Student], template_name_fixture: str,
-                        expected_content: str) -> None:
+                        expected_content_path: Path) -> None:
+    expected_content = expected_content_path.read_text().replace(
+        'Generated at: 2024-02-21 22:58',
+        f'Generated at: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M")}')
     assert render_content(students_data, template_name_fixture) == expected_content
 
 
