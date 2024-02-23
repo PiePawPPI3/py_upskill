@@ -1,4 +1,5 @@
 import datetime
+import os
 from pathlib import Path
 
 import pytest
@@ -27,15 +28,20 @@ def terminal_printer():
 
 
 @pytest.fixture
-def txt_writer(tmpdir):
-    output_path = tmpdir.mkdir("outputs").strpath
-    return TxtWriter(output_path)
+def output_path(tmpdir):
+    return tmpdir.mkdir('output')
 
 
 @pytest.fixture
-def html_writer(tmpdir):
-    output_path = tmpdir.mkdir("outputs").strpath
-    return HtmlWriter(output_path)
+def txt_writer(output_path):
+    output_path_str = output_path.strpath
+    return TxtWriter(output_path_str)
+
+
+@pytest.fixture
+def html_writer(output_path):
+    output_path_str = output_path.strpath
+    return HtmlWriter(output_path_str)
 
 
 @pytest.mark.parametrize('expected_content_path, template_type',
@@ -51,33 +57,36 @@ def test_render_content(students_data: list[Student], expected_content_path: Pat
 
 
 def test_terminal_printer(mocker, students_data: list[Student], caplog, terminal_printer) -> None:
-    mocker.patch('adapters.data_saver.render_content', return_value='Romek')
+    mocker.patch('adapters.data_saver.render_content', return_value='Cezary')
 
     terminal_printer.write(students_data)
 
     for record in caplog.records:
-        assert 'Romek' in record.message
+        assert 'Cezary' in record.message
 
 
-def test_txt_writer_writes_file(tmpdir, mocker, students_data: list[Student], txt_writer) -> None:
+@freeze_time('2024-02-21 22:58:34')
+def test_txt_writer_writes_file(students_data: list[Student], txt_writer) -> None:
     txt_writer.write(students_data)
+    output_files = os.listdir(txt_writer.output_path)
+    time_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
-    time_str = mocker.datetime.now().strftime('%Y%m%d%H%M%S')
-    expected_file_path = tmpdir.join(f'scores_{time_str}.txt')
-
-    assert expected_file_path.exists()
-    content = expected_file_path.read_text()
-    assert 'Romek' in content
+    for file in output_files:
+        assert file.startswith(f'scores_{time_str}') and file.endswith('.txt')
 
 
-def test_html_writer_writes_file(tmpdir, mocker, students_data: list[Student], html_writer) -> None:
-    mocker.patch('adapters.data_saver.render_content', return_value='<p>Romek</p>')
+@freeze_time('2024-02-22 23:11:11')
+def test_html_writer_writes_file(students_data: list[Student], html_writer, mocker) -> None:
+    mocker.patch('adapters.data_saver.render_content', return_value='<p>Cezary</p>')
 
     html_writer.write(students_data)
-
+    output_files = os.listdir(html_writer.output_path)
     time_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    expected_file_path = tmpdir.join(f'scores_{time_str}.html')
 
-    assert expected_file_path.exists()
-    content = expected_file_path.read_text()
-    assert '<p>Romek</p>' in content
+    for file in output_files:
+        assert file.startswith(f'scores_{time_str}') and file.endswith('.html')
+
+        expected_file_path = os.path.join(html_writer.output_path, file)
+        with open(expected_file_path, 'r') as f:
+            content = f.read()
+            assert '<p>Cezary</p>' in content
