@@ -1,10 +1,13 @@
 import datetime
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 from ports.data_parser import FileSaveError
 from jinja2 import Environment, FileSystemLoader
 
 from ports.student import Student
+
+TEMPLATE_PATH = Path(__file__).parent.parent / 'templates'
 
 
 class FileWriter(ABC):
@@ -22,7 +25,7 @@ class TxtWriter(FileWriter):
 
         try:
             time_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-            file_path = f'{self.output_path}scores_{time_str}.txt'
+            file_path = f'{self.output_path}/scores_{time_str}.txt'
 
             rendered_content = render_content(students_data, 'student_report_template.txt')
 
@@ -41,7 +44,7 @@ class HtmlWriter(FileWriter):
     def write(self, students_data: list[Student]) -> None:
         try:
             time_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-            file_path = f'{self.output_path}scores_{time_str}.html'
+            file_path = f'{self.output_path}/scores_{time_str}.html'
 
             rendered_content = render_content(students_data, 'student_report_template.html')
 
@@ -59,7 +62,7 @@ class TerminalPrinter(FileWriter):
 
 
 def render_content(students_data: list[Student], template_name: str) -> str:
-    env = Environment(loader=FileSystemLoader('templates'))
+    env = Environment(loader=FileSystemLoader(TEMPLATE_PATH))
     template = env.get_template(template_name)
 
     rendered_report = template.render({

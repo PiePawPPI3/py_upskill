@@ -1,0 +1,24 @@
+Student Report
+Generated at: 2024-02-21 22:58
+
+
+Username: Cezary
+Scores: [3.0, 5.0, 1.0, 3.0, 1.0, 1.0, 5.0, 4.0, 6.0]
+Average: 3.2
+Passed: Passed
+---
+
+
+Username: Dionizy
+Scores: [6.0, 3.0, 6.0, 5.5, 5.0, 3.5, 4.0]
+Average: 4.7
+Passed: Passed
+---
+
+
+Username: Barnaba
+Scores: [5.0, 4.0, 5.5, 4.0, 6.0, 3.5, 1.0]
+Average: 4.1
+Passed: Passed
+---
+
